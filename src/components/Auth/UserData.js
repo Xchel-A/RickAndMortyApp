@@ -1,94 +1,138 @@
-import { View, Text, SafeAreaView, Image, StyleSheet } from 'react-native';
-import React from 'react';
+import React, {useContext} from 'react';
+import { View, Text, Image, StyleSheet, TouchableOpacity, ImageBackground } from 'react-native';
 import { userDetail, user } from "../../utils/userDb";
 import Icono from '../../assets/Logo.png';
-export default function UserData() {
+import AuthContext from '../../context/AuthContext';
+import backgroundImg from '../../assets/backgroundImg.jpg';
+export default function UserData({ handleAuthChange }) {
+  const { logout,userData  } = useContext(AuthContext);
+  const handleLogout = () => {
+    //logout desde el context
+    logout();
+    //console.log('Cerrar sesión');
+  };
+  
+  const username = userData.username;
+  const password = userData.password;
+  const firstName = userData.firstName;
+  const lastName = userData.lastName;
+  const email = userData.email;
+
+  //console.log("USER"+userData);
   return (
-    <View style={styles.card}>
-        <Image source={Icono} style={styles.image} />
-        <View style={styles.cardContent}>
-            <View style={styles.infoView}><Text style={styles.infoText}>Usuario: </Text><Text style={styles.infoCharacter}>{user.username}</Text></View>
-            <View style={styles.infoView}><Text style={styles.infoText}>Nombre: </Text><Text style={styles.infoCharacter}>{userDetail.fristName}</Text></View>
-            <View style={styles.infoView}><Text style={styles.infoText}>Apellido: </Text><Text style={styles.infoCharacter}>{userDetail.lastName}</Text></View>
-            <View style={styles.infoView}><Text style={styles.infoText}>Correo: </Text><Text style={styles.infoCharacter}>{userDetail.email}</Text></View>
-            <View style={styles.infoView}><Text style={styles.infoText}>Especie: </Text><Text style={styles.infoCharacter}>Humano</Text></View>   
+    <ImageBackground source={backgroundImg} style={styles.backgroundImage}>
+    <View style={styles.container}>
+      <View style={styles.header}>
+        <Image source={Icono} style={styles.logo} />
+      </View>
+      <View style={styles.card}>
+        <View style={styles.infoContainer}>
+          <View style={styles.infoRow}>
+            <Text style={styles.infoLabel}>Usuario:</Text>
+            <Text style={styles.infoValue}>{username}</Text>
+          </View>
+          <View style={styles.infoRow}>
+            <Text style={styles.infoLabel}>Nombre:</Text>
+            <Text style={styles.infoValue}>{firstName}</Text>
+          </View>
+          <View style={styles.infoRow}>
+            <Text style={styles.infoLabel}>Apellido:</Text>
+            <Text style={styles.infoValue}>{lastName}</Text>
+          </View>
+          <View style={styles.infoRow}>
+            <Text style={styles.infoLabel}>Correo:</Text>
+            <Text style={styles.infoValue}>{email}</Text>
+          </View>
+          <View style={styles.infoRow}>
+            <Text style={styles.infoLabel}>Especie:</Text>
+            <Text style={styles.infoValue}>Humano</Text>
+          </View>
+          <TouchableOpacity style={styles.logoutButton} onPress={handleLogout}>
+            <Text style={styles.logoutButtonText}>Cerrar sesión</Text>
+          </TouchableOpacity>
         </View>
+      </View>
+      {/* <Image source={Pie} style={styles.piepag} /> */}
+     
     </View>
-  )
+    </ImageBackground>
+  );
 }
 
 const styles = StyleSheet.create({
-    container: {
-      flex: 1,
-      backgroundColor: '#f2f2f2',
-      justifyContent: 'center',
-      alignItems: 'center',
+  backgroundImage: {
+    height:900,
+    resizeMode: 'cover',
+    marginLeft:-25
+    //marginBottom:-100
+  },
+  container: {
+    flex: 0,
+    //backgroundColor: '#f2f2f2',
+  },
+  header: {
+    alignItems: 'center',
+    paddingVertical: 20,
+    //backgroundColor: '#fff',
+  },
+  logo: {
+    width: 800,
+    height: 300,
+    resizeMode: 'contain',
+  },
+  card: {
+    backgroundColor: '#fff',
+    borderRadius: 10,
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 2,
     },
-    card: {
-      backgroundColor: '#FFFFFF',
-      borderRadius: 10,
-      shadowColor: '#000',
-      width:370,
-      height:580,
-      shadowOffset: {
-        width: 0,
-        height: 0,
-      },
-      shadowOpacity: 0.25,
-      shadowRadius: 3.84,
-      elevation: 5,
-    },
-    cardContent: {
-      padding: 20,
-      alignItems: 'center',
-    },
-    image: {
-      
-      width: 340,
-      height: 150,
-     
-    },
-    label: {
-      fontWeight: 'bold',
-      fontSize: 22,
-      marginBottom: 5,
-    },
-    text: {
-      fontSize: 20,
-      marginBottom: 10,
-    },
-    infoContainer:{
-      alignContent:'center',
-    },
-    propTitle:{
-      fontSize:20,
-      color:'gray',
-      textAlign:'center'
-    },
-    infoView:{
-      flexDirection:'row',
-      justifyContent:'space-between',
-      alignItems:'center',
-      height:35,
-      marginBottom:15
-    },
-    infoText:{
-      fontWeight:'bold',
-      fontSize:18,
-      backgroundColor:"#69C8ECFF",
-      borderRadius:8,
-      textAlign:'center',
-      padding:2,
-      width:100,
-      marginRight:10,
-    },
-    infoCharacter:{
-      fontSize:16,
-      backgroundColor:"#B7E4F9FF",
-      borderRadius:8,
-      textAlign:'center',
-      padding:2,
-      width:240,
-    }
-  });
-  
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+    elevation: 5,
+    marginHorizontal: 20,
+    marginTop: -80,
+    marginBottom: 20,
+    padding: 20,
+    marginLeft:45
+  },
+  infoContainer: {
+    marginTop: 20,
+  },
+  infoRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: 15,
+  },
+  infoLabel: {
+    fontWeight: 'bold',
+    fontSize: 16,
+    color: '#69C8ECFF',
+    width: 80,
+  },
+  infoValue: {
+    fontSize: 16,
+    flex: 1,
+  },
+  piepag: {
+    marginTop: -25,
+    marginLeft: 50,
+    height: 250,
+    width: 300,
+    alignSelf: 'center',
+  },
+  logoutButton: {
+    alignSelf: 'center',
+    backgroundColor: '#69C8ECFF',
+    paddingVertical: 10,
+    paddingHorizontal: 20,
+    borderRadius: 5,
+    marginTop: 20,
+  },
+  logoutButtonText: {
+    color: '#fff',
+    fontWeight: 'bold',
+    fontSize: 16,
+  },
+});

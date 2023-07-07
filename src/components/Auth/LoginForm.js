@@ -1,124 +1,144 @@
-import { View,Text,TextInput,StyleSheet,Keyboard, Button } from "react-native";
-import React, { useState } from "react";
-import { TouchableOpacity } from "react-native-gesture-handler";
-import { useFormik } from "formik";
+import React, { useState, useContext } from 'react';
+import { View, Text, TextInput, TouchableOpacity, StyleSheet,Image } from 'react-native';
+import { useFormik } from 'formik';
 import * as Yup from 'yup';
-import { userDetail,user } from "../../utils/userDb";
+import { user,userDetail } from "../../utils/userDb";
 import Toast from 'react-native-toast-message';
+import Icono from '../../assets/Logo.png'
+import Pie from '../../assets/ImgPieP.png';
+import AuthContext from '../../context/AuthContext';
+export default function LoginForm() {
+  const [error, setError] = useState('');
+  const { login } = useContext(AuthContext);
+  const formik = useFormik({
+    initialValues: {
+      username: '',
+      password: '',
+    },
+    validationSchema: Yup.object({
+      username: Yup.string().required('El nombre de usuario es obligatorio'),
+      password: Yup.string().required('La contraseña es obligatoria'),
+    }),
+    onSubmit: (values) => {
+      setError('');
+      const { username, password } = values;
+      if (username === user.username && password === user.password) {
+        console.log('Iniciando sesión...');
+        Toast.show({
+          type: 'success',
+          text1: 'ÉXITO',
+          text2: 'Iniciando sesión',
+          position: 'top',
+        });
+       
+        const userData = {
+            ...user,
+            ...userDetail,
+          };
+        //const jsonData = JSON.stringify(userData);
+        //console.log(jsonData);
+        login(userData);
+        
+      } else {
+        console.log('Usuario o contraseña incorrectos');
+        Toast.show({
+          type: 'error',
+          text1: 'ERROR',
+          text2: 'Las credenciales son incorrectas',
+          position: 'top',
+        });
+        setError('Usuario o contraseña incorrectos');
+      }
+    },
+  });
 
-export default function LoginForm({navigation }) {
-    const [error , setError]= useState("")
-    const formik = useFormik({
-        initialValues :initialValues(),
-        validationSchema: Yup.object(validationSchema()),
-        validateOnChange:false,
-        onSubmit:(formData)=>{
-            setError("")
-            const {username , password} = formData;
-            if (username!== user.username || password!== user.password) {
-                console.log('Usuario o contrasela incorrectos')
-                 // Mostrar el toast al cargar el componente
-                 Toast.show({
-                    type: 'error',
-                    text1: 'ERROR',
-                    text2: 'Las credenciales son incorrectas',
-                    position: 'top',
-                });
-            }else{
-                console.log('Iniciando sesion...');
-                console.log(userDetail);
-                Toast.show({
-                    type: 'success',
-                    text1: 'ÉXITO',
-                    text2: 'Iniciando sesión',
-                    position: 'top',
-                });
-                 // Actualizar el estado de autenticación (auth) a verdadero
-                //setAuth(true);
-                // Redirigir a la pantalla de inicio (Home)
-                //navigation.replace('Home');
-            }
+  return (
+    <View style={styles.container}>
+        <Image source={Icono} style={styles.image} />
+      <Toast ref={(ref) => Toast.setRef(ref)} />
+      <Text style={styles.title}>Iniciar Sesión</Text>
+      <TextInput
+        placeholder="Nombre de usuario"
+        style={styles.input}
+        autoCapitalize="none"
+        onChangeText={formik.handleChange('username')}
+        value={formik.values.username}
+        onBlur={formik.handleBlur('username')}
+      />
+      {formik.touched.username && formik.errors.username ? (
+        <Text style={styles.error}>{formik.errors.username}</Text>
+      ) : null}
+      <TextInput
+        placeholder="Contraseña"
+        style={styles.input}
+        autoCapitalize="none"
+        secureTextEntry
+        onChangeText={formik.handleChange('password')}
+        value={formik.values.password}
+        onBlur={formik.handleBlur('password')}
+      />
+      {formik.touched.password && formik.errors.password ? (
+        <Text style={styles.error}>{formik.errors.password}</Text>
+      ) : null}
+      <TouchableOpacity onPress={formik.handleSubmit} style={styles.button}>
+        <Text style={styles.buttonText}>Iniciar sesión</Text>
+      </TouchableOpacity>
+      {error ? <Text style={styles.error}>{error}</Text> : null}
 
-
-/*
-            console.log('Formulario enviado');
-            console.log(formData);*/
-        }
-    })
-    function initialValues(){
-        return{
-            usernames:'',
-            password:''
-        }
-    }
-    function validationSchema() {
-        return{
-            username:Yup.string().required('El nombre de usuario es obligatorio'),
-            password: Yup.string().required('La contraseña es obligatoria')
-        }
-    }
-    return(
-        <View> 
-            <Toast ref={(ref) => Toast.setRef(ref)} />
-            <Text style={styles.tittle}>Iniciar Sesion</Text>
-            <TextInput 
-                placeholder="Nombre de usuario"
-                style={styles.input}
-                autoCapitalize='none'
-                onChangeText={(text)=>formik.setFieldValue('username',text)}
-            />
-            <TextInput 
-                placeholder="Nombre de usuario"
-                style={styles.input}
-                autoCapitalize='none'
-                secureTextEntry={true}
-                onChangeText={(text)=>formik.setFieldValue('password',text)}
-            />
-            <TouchableOpacity  onPress={formik.handleSubmit} style={styles.button}>
-                <Text>Iniciar sesion</Text>
-            </TouchableOpacity>
-            <Text style={styles.error}>{formik.errors.username}</Text>
-            <Text style={styles.error}>{formik.errors.password}</Text>
-            
-        </View>
-    )
-    
+      <Image source={Pie} style={styles.piepag} />
+    </View>
+  );
 }
 
 const styles = StyleSheet.create({
-    tittle:{
-        textAlign:'center',
-        fontSize: 20,
-        fontWeight:'bold',
-        marginTop:90,
-        marginBottom:20
-    },
-    input:{
-        height:40,
-        margin:12,
-        borderWidth:1,
-        padding:10,
-        borderRadius:10,
-        marginBottom:20
-
-    },
-    button:{
-        textAlign:'center',
-        with:225,
-        height:40,
-        borderRadius:20,
-        alignItems:'center',
-        justifyContent:'center',
-        backgroundColor:'#69C8ECFF',
-        margin:15
     
-    
-        
-    },
-    error: {
-        textAlign: 'center',
-        color: 'red',
-        marginTop: 5,
-      },
+  container: {
+    flex: 0,
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginTop:170
+  },
+  title: {
+    fontSize: 20,
+    fontWeight: 'bold',
+    marginBottom: 20,
+  },
+  input: {
+    width: '80%',
+    height: 40,
+    borderWidth: 1,
+    borderColor: '#ccc',
+    borderRadius: 5,
+    paddingHorizontal: 10,
+    marginBottom: 10,
+  },
+  button: {
+    width: '80%',
+    height: 40,
+    backgroundColor: '#69C8ECFF',
+    borderRadius: 5,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  buttonText: {
+    color: '#fff',
+    fontWeight: 'bold',
+  },
+  error: {
+    color: 'red',
+    marginBottom: 10,
+  },
+  image: {
       
-})
+    width: 340,
+    height: 150,
+   
+  },
+  piepag: {
+    marginTop: 65,
+    marginLeft: 50,
+    height: 250,
+    width: 350,
+    alignSelf: 'center',
+  },
+});
