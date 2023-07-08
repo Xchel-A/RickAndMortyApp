@@ -8,7 +8,7 @@ export default function NavigationAccount() {
     const Stack = createStackNavigator();
   return (
     <Stack.Navigator>
-        <Stack.Screen name='Login' component={LoginForm} options={{ title: "Iniciar Sesión" }} />
+       
 
         <Stack.Screen name='Home' component={Navigation} options={{title:"Rick and Morty"}}/>
     </Stack.Navigator>
