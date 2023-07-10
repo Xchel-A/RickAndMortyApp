@@ -2,16 +2,17 @@ import { View, Text, Image } from 'react-native'
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs'
 import Ionicons from '@expo/vector-icons/Ionicons';
 import { FontAwesome5 } from '@expo/vector-icons'; 
-import React, {useState, useEffect} from 'react'
+import React, {useState, useEffect, useContext} from 'react'
 import Favoritos from '../screen/Favoritos'
 import Rickandmorty from '../screen/Rickandmorty'
 import Account from '../screen/Account';
 import NavigationFavoritos from './NavigationFavoritos';
 import NavigationRickandMorty from './NavigationRickandMorty';
 import { getFavorites } from '../api/FavoritosApi';
-
+import AuthContext from '../context/AuthContext';
 
 export default function Navigation() {
+  const { auth } = useContext(AuthContext);
     const Tab = createBottomTabNavigator();
     const [favoriteCount, setFavoriteCount] = useState(0);
     const fetchFavorites = async () => {
@@ -68,13 +69,33 @@ export default function Navigation() {
           name='Account' 
           component={Account}
           options={{
-            tabBarLabel: "", // Establecer tabBarLabel como una cadena vacía
-            tabBarIcon: ({ focused, color, size }) => {
-              let iconName = focused ? 'user-tie' : 'user-tie';
-              return <FontAwesome5 name={iconName} size={size} color={color} />;
-            },
-          }}
-        />
+            tabBarLabel:"",
+            tabBarIcon: ({ color, size }) => (
+              <View>
+                <FontAwesome5 name="user-tie" size={size} color={color} solid/>
+                
+                  <View
+                    style={{
+                      position: 'absolute',
+                      top: 0,
+                      right: -8,
+                      minWidth: 10,
+                      height: 10,
+                      borderRadius: 8,
+                      backgroundColor: auth?'green':'gray',
+                      justifyContent: 'center',
+                      alignItems: 'center',
+                    }}
+                  >
+              
+            
+          
+            </View>
+          
+        </View>
+      ),
+    }}
+  />
         <Tab.Screen 
             name='RickandMorty' 
             component={NavigationRickandMorty}
@@ -92,7 +113,7 @@ export default function Navigation() {
           tabBarIcon: ({ color, size }) => (
             <View>
               <FontAwesome5 name="heart" size={size} color={color} solid/>
-              {favoriteCount > 0 && (
+              {auth &&favoriteCount > 0 && (
                 <View
                   style={{
                     position: 'absolute',
@@ -106,9 +127,11 @@ export default function Navigation() {
                     alignItems: 'center',
                   }}
                 >
-            <Text style={{ color: 'white', fontSize: 10 }}>
-              {favoriteCount}
-            </Text>
+            
+          <Text style={{ color: 'white', fontSize: 10 }}>
+            {favoriteCount}
+          </Text>
+        
           </View>
         )}
       </View>

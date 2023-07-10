@@ -8,8 +8,9 @@ export const AuthProvider = ({ children }) => {
 
   const login = (userData) => {
     // Aquí puedes implementar la lógica para iniciar sesión
-    setAuth(true);
     setUserData(userData);
+    setAuth(true);
+    
   };
 
   const logout = () => {
