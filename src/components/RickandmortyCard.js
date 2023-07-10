@@ -1,7 +1,7 @@
 import { View, Text, Image, StyleSheet, TouchableWithoutFeedback } from 'react-native'
 import React from 'react'
 import { useNavigation } from '@react-navigation/native'
-
+import ButtonCardFav from './ButtonCardFav'
 export default function RickandmortyCard(props) {
     const {characters} = props
     const navigation = useNavigation()
@@ -31,9 +31,10 @@ export default function RickandmortyCard(props) {
                     <Text style={styles.number}>#{`${characters.id}`.padStart(3, 0)}</Text>
                       <View style={styles.containerText}>
                           <Text style={styles.name} numberOfLines={3}>{characters.name}</Text>
+                          
                       </View>
-
-                      <Image source={{uri: characters.image}} style={styles.image}/>
+                        
+                      <Image source={{uri: characters.image}} style={styles.image}/>  
                 </View>
             </View>
         </View>
@@ -47,26 +48,28 @@ const styles=StyleSheet.create({
     flexGrow:1,
     padding:16,
     height:130,
-    padding:5
+    padding:5,
+    shadowColor:'#000',
+    shadowOffset:20
   },
   marginCard:{
     flex:1,
-    padding:5,
-    backgroundColor:'#24325fff',
-    borderRadius:10,
-    shadowColor:'#fff',
-    shadowOpacity:0.3,
+    padding:3,
+    backgroundColor:'#fff',
+    borderRadius:15,
+    shadowColor:'#000',
+    shadowOpacity:0.6,
     shadowRadius:4,
     elevation:5
   },
   colorCard:{
     flex:1,
     padding:5,
-    borderRadius:10,
-    backgroundColor:'#24325fff'
+    borderRadius:15,
+    backgroundColor:'#fff'
   },
   name:{
-    color:'#fff',
+    color:'#000',
     fontWeight:'bold',
     fontSize:14
   },
@@ -85,7 +88,7 @@ const styles=StyleSheet.create({
   number:{
     position:'absolute',
     right:10,
-    color:'#fff',
-    fontSize:11
+    color:'#9C27B0',
+    fontSize:9
   }
 })

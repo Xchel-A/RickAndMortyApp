@@ -22,7 +22,7 @@ export default function Rickandmorty(props) {
         
         <Header id={id} img={img} nom={nom} />
           <View style={styles.infoContainer}>
-            <Properties gen={gen} spe={spe} ori={ori} loc={loc} stat={stat}/>
+            <Properties data={params} gen={gen} spe={spe} ori={ori} loc={loc} stat={stat}/>
           </View>
     </SafeAreaView>
   )

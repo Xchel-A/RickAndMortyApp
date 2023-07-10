@@ -1,15 +1,21 @@
 import { View, Text, StyleSheet } from 'react-native'
-import React from 'react'
+import React , { useContext }from 'react'
+import Favorito from '../Favorito'
+import AuthContext from '../../context/AuthContext';
 
-export default function Properties({gen, spe, typ, ori, loc, stat}) {
+export default function Properties({data,gen, spe, typ, ori, loc, stat}) {
+  const { auth } = useContext(AuthContext);
+  console.log(data)
   return (
     <View style={styles.infoContainer}>
       <View style={styles.infoView}><Text style={styles.infoText}>Estatus: </Text><Text style={styles.infoCharacter}>{stat}</Text></View>
       <View style={styles.infoView}><Text style={styles.infoText}>Genero: </Text><Text style={styles.infoCharacter}>{gen}</Text></View>
       <View style={styles.infoView}><Text style={styles.infoText}>Especie: </Text><Text style={styles.infoCharacter}>{spe}</Text></View>
       <View style={styles.infoView}><Text style={styles.infoText}>Origen: </Text><Text style={styles.infoCharacter}>{ori}</Text></View>
-      <View style={styles.infoView}><Text style={styles.infoText}>Ubicacion: </Text><Text style={styles.infoCharacter}>{loc}</Text></View>      
+      <View style={styles.infoView}><Text style={styles.infoText}>Ubicacion: </Text><Text style={styles.infoCharacter}>{loc}</Text></View>   
+      {auth&&<Favorito data={data}/> }
     </View>
+    
   )
 }
 

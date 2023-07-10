@@ -1,6 +1,6 @@
 import { View, Text,Image, StyleSheet } from 'react-native'
 import React, { useState } from 'react'
-//import FavoriteButton from '../FavoriteButton'
+
 export default function Imagen({id,nom,img}) {
 
 
@@ -8,8 +8,8 @@ export default function Imagen({id,nom,img}) {
   return (
     <View style={styles.headerContent}>
       <Image style={styles.image} source={{uri: img}}/>
-      <Text style={styles.textName}><Text style={styles.idText}>ID: #{id} </Text> {nom}</Text>
-      <FavoriteButton />
+      <Text style={styles.textName}><Text style={styles.idText}>ID: #{id} </Text> {nom} </Text>
+      
     </View>
   )
 }
