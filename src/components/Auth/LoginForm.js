@@ -55,7 +55,7 @@ export default function LoginForm() {
   return (
     <View style={styles.container}>
         <Image source={Icono} style={styles.image} />
-      <Toast ref={(ref) => Toast.setRef(ref)} />
+      <Toast  />
       <Text style={styles.title}>Iniciar Sesión</Text>
       <TextInput
         placeholder="Nombre de usuario"

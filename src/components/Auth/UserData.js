@@ -1,11 +1,49 @@
-import React, {useContext} from 'react';
+import React, {useContext, useState, useEffect} from 'react';
 import { View, Text, Image, StyleSheet, TouchableOpacity, ImageBackground } from 'react-native';
 import { userDetail, user } from "../../utils/userDb";
 import Icono from '../../assets/Logo.png';
 import AuthContext from '../../context/AuthContext';
 import backgroundImg from '../../assets/backgroundImg.jpg';
+import { getFavorites } from '../../api/FavoritosApi';
+import { useNavigation } from '@react-navigation/native';
+
 export default function UserData({ handleAuthChange }) {
+  const navigation = useNavigation();
   const { logout,userData  } = useContext(AuthContext);
+
+
+
+  const [favoriteCount, setFavoriteCount] = useState(0);
+    const fetchFavorites = async () => {
+      const favoritesData = await getFavorites();
+      setFavoriteCount(favoritesData.length);
+    };
+    const updateFavorites = async () => {
+      const favoritesData = await getFavorites();
+      setFavoriteCount(favoritesData.length);
+    };
+   
+    useEffect(() => {
+      fetchFavorites();
+    }, []);
+    useEffect(() => {
+      updateFavorites();
+    }, []);
+    
+    useEffect(() => {
+      const interval = setInterval(() => {
+        updateFavorites();
+      }, 500);
+    
+      return () => {
+        clearInterval(interval);
+      };
+    }, []);
+
+
+
+
+
   const handleLogout = () => {
     //logout desde el context
     logout();
@@ -47,9 +85,19 @@ export default function UserData({ handleAuthChange }) {
             <Text style={styles.infoLabel}>Especie:</Text>
             <Text style={styles.infoValue}>Humano</Text>
           </View>
-          <TouchableOpacity style={styles.logoutButton} onPress={handleLogout}>
-            <Text style={styles.logoutButtonText}>Cerrar sesión</Text>
-          </TouchableOpacity>
+          <View style={styles.btnRow}>
+            <View>
+              <TouchableOpacity style={styles.logoutButton} onPress={handleLogout}>
+                <Text style={styles.logoutButtonText}>Cerrar sesión</Text>
+              </TouchableOpacity>
+            </View>
+            <View>
+              <TouchableOpacity style={styles.favoriteButton} onPress={() => navigation.navigate('Favoritos')}>
+                <Text style={styles.logoutButtonText}>Mis favoritos: {favoriteCount}</Text>
+              </TouchableOpacity>
+            </View>
+          
+          </View>
         </View>
       </View>
       {/* <Image source={Pie} style={styles.piepag} /> */}
@@ -60,6 +108,10 @@ export default function UserData({ handleAuthChange }) {
 }
 
 const styles = StyleSheet.create({
+  btnRow:{
+    flexDirection: 'row',
+
+  },
   backgroundImage: {
     height:900,
     resizeMode: 'cover',
@@ -129,6 +181,16 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
     borderRadius: 5,
     marginTop: 20,
+    margin:10
+  },
+  favoriteButton: {
+    alignSelf: 'center',
+    backgroundColor: '#8B008B',
+    paddingVertical: 10,
+    paddingHorizontal: 20,
+    borderRadius: 5,
+    marginTop: 20,
+    margin:10
   },
   logoutButtonText: {
     color: '#fff',
