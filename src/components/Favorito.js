@@ -1,14 +1,15 @@
 // Favorito.js
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import * as Animatable from 'react-native-animatable';
 import { FontAwesome5 } from '@expo/vector-icons';
 import { getFavorites, isFavorite, toggleFavorite } from '../api/FavoritosApi';
 import { useIsFocused } from '@react-navigation/native';
-
+import AuthContext from '../context/AuthContext';
 export default function Favorito({ data }) {
   const [isFavorited, setIsFavorited] = useState(false);
   const isFocused = useIsFocused();
+  const { auth  } = useContext(AuthContext);
   useEffect(() => {
     const checkFavorite = async () => {
       const favorites = await getFavorites();
@@ -45,8 +46,12 @@ export default function Favorito({ data }) {
 
   return (
     <View style={styles.container}>
+      {auth ? (
+        <View style={styles.container}>
+        <View>
       <Text style={styles.text}>{isFavorited ? 'Eliminar de favoritos' : 'Agregar a favoritos'}</Text>
-
+      </View>
+      <View>
       <TouchableOpacity onPress={addFavorite} activeOpacity={0.8}>
         <Animatable.View
           animation={isFavorited ? 'rubberBand' : null}
@@ -62,6 +67,14 @@ export default function Favorito({ data }) {
           />
         </Animatable.View>
       </TouchableOpacity>
+      </View>
+      </View>
+      ) : (
+        <View>
+           <Text >{'Inicie sesion para agregar a favoritos'}</Text>
+        </View>
+
+      )}
     </View>
   );
 }

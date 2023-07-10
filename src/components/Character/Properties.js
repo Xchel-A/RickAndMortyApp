@@ -13,7 +13,7 @@ export default function Properties({data,gen, spe, typ, ori, loc, stat}) {
       <View style={styles.infoView}><Text style={styles.infoText}>Especie: </Text><Text style={styles.infoCharacter}>{spe}</Text></View>
       <View style={styles.infoView}><Text style={styles.infoText}>Origen: </Text><Text style={styles.infoCharacter}>{ori}</Text></View>
       <View style={styles.infoView}><Text style={styles.infoText}>Ubicacion: </Text><Text style={styles.infoCharacter}>{loc}</Text></View>   
-      {auth&&<Favorito data={data}/> }
+      <Favorito data={data}/> 
     </View>
     
   )
